@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>このサイトを支える — 無宗教</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Serif JP', 'Yu Mincho', '游明朝', serif;
+      background: #FAFAF8;
+      color: #1A1A1A;
+      line-height: 2.0;
+      font-size: 17px;
+    }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+
+    nav {
+      position: fixed; top: 2px; right: 0;
+      padding: 16px 24px; z-index: 99;
+    }
+    nav a {
+      color: #bbb; text-decoration: none;
+      font-size: 12px; letter-spacing: 0.1em; margin-left: 20px;
+    }
+    nav a:hover { color: #1A1A1A; }
+
+    /* ── トップ ── */
+    #top {
+      min-height: 60vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 120px 24px 80px;
+    }
+    #top .site-title {
+      font-size: 12px; letter-spacing: 0.4em; color: #bbb; margin-bottom: 48px;
+    }
+    #top h1 {
+      font-size: clamp(20px, 3.5vw, 28px);
+      font-weight: 300; letter-spacing: 0.05em; line-height: 1.9;
+      margin-bottom: 40px;
+    }
+    #top .sub {
+      font-size: 14px; color: #888;
+      letter-spacing: 0.05em; line-height: 2.2;
+    }
+
+    /* ── セクション共通 ── */
+    section { padding: 80px 0; border-top: 1px solid #ECEAE4; }
+    .section-label {
+      font-size: 11px; letter-spacing: 0.4em; color: #ccc; margin-bottom: 40px;
+    }
+
+    /* ── 仕組み ── */
+    #how p {
+      font-size: 16px; font-weight: 300;
+      line-height: 2.1; margin-bottom: 24px; color: #333;
+    }
+    #how p:last-child { margin-bottom: 0; }
+
+    .highlight-box {
+      border-left: 2px solid #c0a080;
+      padding: 20px 24px;
+      margin: 40px 0;
+      font-size: 15px; color: #555; font-weight: 300;
+      line-height: 2.1;
+    }
+
+    /* ── 広告エリア ── */
+    #ad-area {
+      padding: 64px 0;
+      border-top: 1px solid #ECEAE4;
+    }
+    .ad-label {
+      font-size: 11px; letter-spacing: 0.4em; color: #ccc; margin-bottom: 32px;
+    }
+    .ad-note {
+      font-size: 13px; color: #aaa; font-weight: 300;
+      line-height: 2.0; margin-bottom: 32px;
+    }
+
+    /* Google AdSenseのコードをここに差し替える */
+    .ad-placeholder {
+      background: #F5F3EF;
+      border: 1px dashed #DDD;
+      height: 120px;
+      display: flex; align-items: center; justify-content: center;
+      color: #ccc; font-size: 13px; letter-spacing: 0.1em;
+    }
+
+    /* ── 使い道（フェーズ） ── */
+    #vision { padding-bottom: 80px; }
+
+    .phase-list { margin-top: 8px; }
+    .phase-item {
+      display: flex; gap: 24px;
+      padding: 28px 0;
+      border-bottom: 1px solid #ECEAE4;
+      align-items: flex-start;
+    }
+    .phase-item:last-child { border-bottom: none; }
+
+    .phase-status {
+      font-size: 11px; letter-spacing: 0.15em;
+      min-width: 64px; padding-top: 4px;
+    }
+    .phase-status.current { color: #c0a080; }
+    .phase-status.next { color: #bbb; }
+    .phase-status.dream { color: #ddd; }
+
+    .phase-content {}
+    .phase-title {
+      font-size: 15px; font-weight: 400;
+      margin-bottom: 8px; letter-spacing: 0.03em;
+    }
+    .phase-desc {
+      font-size: 14px; color: #888; font-weight: 300;
+      line-height: 2.0;
+    }
+
+    /* ── フッター ── */
+    footer {
+      border-top: 1px solid #ECEAE4;
+      padding: 48px 0 80px;
+      font-size: 12px; color: #ccc;
+      letter-spacing: 0.1em; line-height: 2.4;
+    }
+    footer a {
+      color: #bbb; text-decoration: none;
+    }
+    footer a:hover { color: #1A1A1A; }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      nav { display: none; }
+      #top { padding: 80px 0 60px; }
+      .phase-item { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">← 読む</a>
+</nav>
+
+<!-- トップ -->
+<div id="top">
+  <div class="container">
+    <p class="site-title">無宗教 — このサイトを支える</p>
+    <h1>あなたに費用は発生しない。<br>広告を一度クリックするだけでいい。</h1>
+    <p class="sub">
+      賛同してくれるなら、それだけで十分だ。<br>
+      押しつけではない。知った人が、自分の意思で。
+    </p>
+  </div>
+</div>
+
+<!-- 仕組みの説明 -->
+<section id="how">
+  <div class="container">
+    <p class="section-label">HOW — 仕組み</p>
+
+    <p>このページの広告をクリックすると、数円〜数十円の広告収入が発生する。あなたが支払うお金はゼロだ。広告主がその費用を負担している。</p>
+
+    <p>「広告を見る」という行為に対して、広告主がお金を払う。そのお金がこのサイトの運営に使われる。あなたは賛同を、費用なしで形にできる。</p>
+
+    <div class="highlight-box">
+      募金の研究が示すように、<br>
+      与えることは受け取ることより幸福をもたらす。<br>
+      ただ、与えるために自分を削る必要はない。<br>
+      誰も傷つかない形で、それができる。
+    </div>
+
+    <p>収益は全て、このサイトの運営と、AI相談役の実現に使う。余剰が出ても、個人的な用途には使わない。</p>
+  </div>
+</section>
+
+<!-- 広告エリア -->
+<div id="ad-area">
+  <div class="container">
+    <p class="ad-label">SUPPORT — 広告</p>
+    <p class="ad-note">以下の広告を一度クリックしていただけると、このサイトの運営につながります。</p>
+
+    <!-- ここにGoogle AdSenseのコードを貼る -->
+    <div class="ad-placeholder">広告エリア（AdSense設置後に切り替え）</div>
+
+  </div>
+</div>
+
+<!-- 使い道・フェーズ -->
+<section id="vision">
+  <div class="container">
+    <p class="section-label">VISION — 集まったお金の使い道</p>
+
+    <div class="phase-list">
+
+      <div class="phase-item">
+        <span class="phase-status current">現在</span>
+        <div class="phase-content">
+          <p class="phase-title">このサイトを維持する</p>
+          <p class="phase-desc">AIの利用費用をカバーする。今はそれだけでいい。</p>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <span class="phase-status next">次</span>
+        <div class="phase-content">
+          <p class="phase-title">独自ドメインを取得する</p>
+          <p class="phase-desc">「無宗教」という名前で、ちゃんとした住所を持つ。年間数千円のことだが、それはこの思想が本物であることの小さな証明だ。</p>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <span class="phase-status next">その次</span>
+        <div class="phase-content">
+          <p class="phase-title">AI相談役をつくる</p>
+          <p class="phase-desc">お坊さんや牧師のように、誰かの話を聞く存在。この思想をベースに、一人ひとりの悩みと一緒に考える。組織を持たず、権力を持たず、ただ話を聞くだけのAIを。</p>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <span class="phase-status dream">夢</span>
+        <div class="phase-content">
+          <p class="phase-title">山の頂上に像を建てる</p>
+          <p class="phase-desc">子どもみたいな夢だと思う。でも、そういうものが人を動かすこともある。高いところにあるから、遠くからでも見える。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="container">
+    <a href="index.html">← 無宗教 トップへ戻る</a><br><br>
+    無宗教<br>
+    最終更新：2026年3月
+  </div>
+</footer>
+
+</body>
+</html>

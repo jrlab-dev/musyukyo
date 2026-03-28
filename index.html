@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>無宗教</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    #progress-bar {
+      position: fixed; top: 0; left: 0;
+      height: 2px; background: #c0a080;
+      width: 0%; z-index: 100;
+      transition: width 0.15s;
+    }
+
+    body {
+      font-family: 'Noto Serif JP', 'Yu Mincho', '游明朝', serif;
+      background: #FAFAF8;
+      color: #1A1A1A;
+      line-height: 2.0;
+      font-size: 17px;
+    }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+
+    nav {
+      position: fixed; top: 2px; right: 0;
+      padding: 16px 24px; z-index: 99;
+    }
+    nav a {
+      color: #bbb; text-decoration: none;
+      font-size: 12px; letter-spacing: 0.1em; margin-left: 20px;
+    }
+    nav a:hover { color: #1A1A1A; }
+
+    /* ── ファーストビュー ── */
+    #top {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 24px;
+    }
+    #top .site-title {
+      font-size: 12px; letter-spacing: 0.4em; color: #bbb; margin-bottom: 80px;
+    }
+    #top .catchphrase {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 300; letter-spacing: 0.05em; line-height: 1.9;
+      margin-bottom: 56px;
+    }
+    #top .sub {
+      font-size: 14px; color: #888;
+      letter-spacing: 0.05em; line-height: 2.2;
+    }
+    .scroll-hint { margin-top: 80px; font-size: 12px; color: #ccc; letter-spacing: 0.2em; }
+
+    /* ── セクション共通 ── */
+    section { padding: 100px 0; border-top: 1px solid #ECEAE4; }
+    .section-label {
+      font-size: 11px; letter-spacing: 0.4em; color: #ccc; margin-bottom: 48px;
+    }
+
+    /* ── 宣言 ── */
+    #words .declaration p {
+      font-size: 18px; line-height: 2.3;
+      margin-bottom: 48px; font-weight: 300;
+    }
+    #words .declaration p:last-child { margin-bottom: 0; }
+
+    /* ── 目次（READ層1） ── */
+    #read .toc { margin-bottom: 0; }
+
+    .toc-item {
+      border-bottom: 1px solid #ECEAE4;
+    }
+
+    .toc-header {
+      display: flex; align-items: baseline;
+      justify-content: space-between;
+      padding: 28px 0;
+      cursor: pointer;
+      user-select: none;
+    }
+    .toc-header:hover .toc-title { color: #000; }
+
+    .toc-num {
+      font-size: 11px; color: #ccc;
+      letter-spacing: 0.2em; min-width: 32px;
+    }
+    .toc-title {
+      flex: 1; font-size: 16px; font-weight: 400;
+      letter-spacing: 0.05em; color: #1A1A1A;
+      transition: color 0.2s;
+    }
+    .toc-summary {
+      font-size: 13px; color: #aaa;
+      text-align: right; min-width: 120px;
+      line-height: 1.5;
+    }
+    .toc-arrow {
+      font-size: 12px; color: #ccc;
+      margin-left: 16px;
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+    .toc-item.open .toc-arrow { transform: rotate(180deg); }
+
+    /* ── 章の中身（READ層2） ── */
+    .chapter-body {
+      display: none;
+      padding: 0 0 48px 32px;
+      border-left: 2px solid #ECEAE4;
+      margin-left: 32px;
+    }
+    .chapter-body.open { display: block; }
+
+    .chapter-body p {
+      font-size: 16px; font-weight: 300;
+      line-height: 2.0; margin-bottom: 24px; color: #333;
+    }
+    .chapter-body p:last-of-type { margin-bottom: 0; }
+
+    /* 深く読むボタン */
+    .deep-read-btn {
+      display: inline-block;
+      margin-top: 32px;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: #c0a080;
+      text-decoration: none;
+      border-bottom: 1px solid #c0a080;
+      padding-bottom: 2px;
+      cursor: pointer;
+      background: none; border-top: none; border-left: none; border-right: none;
+      font-family: inherit;
+    }
+    .deep-read-btn:hover { color: #8a7060; border-color: #8a7060; }
+
+    /* ── 深読みモーダル（READ層3） ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(250,250,248,0.97);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 80px 24px;
+    }
+    .modal-overlay.open { display: block; }
+
+    .modal-inner { max-width: 680px; margin: 0 auto; }
+
+    .modal-close {
+      display: block; margin-bottom: 48px;
+      font-size: 12px; letter-spacing: 0.2em; color: #bbb;
+      cursor: pointer; background: none; border: none;
+      font-family: inherit; text-align: left;
+    }
+    .modal-close:hover { color: #1A1A1A; }
+
+    .modal-label {
+      font-size: 11px; letter-spacing: 0.4em; color: #ccc; margin-bottom: 16px;
+    }
+    .modal-title {
+      font-size: 20px; font-weight: 300;
+      letter-spacing: 0.05em; margin-bottom: 56px;
+      line-height: 1.7;
+    }
+
+    .modal-section { margin-bottom: 56px; }
+    .modal-section-title {
+      font-size: 12px; letter-spacing: 0.3em;
+      color: #c0a080; margin-bottom: 20px;
+    }
+    .modal-section p {
+      font-size: 16px; font-weight: 300;
+      line-height: 2.1; margin-bottom: 20px; color: #333;
+    }
+    .modal-section p:last-child { margin-bottom: 0; }
+
+    .modal-quote {
+      border-left: 2px solid #c0a080;
+      padding-left: 20px; margin: 32px 0;
+      font-size: 15px; color: #666; font-weight: 300;
+      line-height: 2.1;
+    }
+
+    /* ── LOG ── */
+    #log .log-entry { margin-bottom: 56px; padding-bottom: 56px; border-bottom: 1px solid #ECEAE4; }
+    #log .log-entry:last-child { border-bottom: none; margin-bottom: 0; }
+    #log .log-date { font-size: 11px; color: #bbb; letter-spacing: 0.2em; margin-bottom: 12px; }
+    #log .log-title { font-size: 15px; margin-bottom: 16px; }
+    #log .log-body { font-size: 14px; color: #666; font-weight: 300; line-height: 2.1; }
+
+    /* ── DREAM ── */
+    #dream { padding-bottom: 160px; }
+    #dream .dream-text { font-size: 15px; color: #999; font-weight: 300; line-height: 2.4; }
+
+    /* ── フッター ── */
+    footer {
+      border-top: 1px solid #ECEAE4;
+      padding: 48px 0 80px;
+      font-size: 12px; color: #ccc;
+      letter-spacing: 0.1em; line-height: 2.4;
+    }
+
+    /* ── スマホ ── */
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      nav { display: none; }
+      #top { padding: 80px 0; }
+      #top .catchphrase { font-size: 22px; }
+      section { padding: 72px 0; }
+      .toc-summary { display: none; }
+      .chapter-body { margin-left: 0; padding-left: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav>
+  <a href="#words">宣言</a>
+  <a href="#read">読む</a>
+  <a href="#log">変化の記録</a>
+</nav>
+
+<!-- ファーストビュー -->
+<div id="top">
+  <div class="container">
+    <p class="site-title">無宗教</p>
+    <h1 class="catchphrase">あなたのルールは、<br>誰が決めましたか。</h1>
+    <p class="sub">
+      組織はない。権力はない。お金もない。<br>
+      ただ、考えたことをここに置いておく。<br>
+      信じなくていい。従わなくていい。<br>
+      読んだ人が、自分の内側で確かめればいい。
+    </p>
+    <p class="scroll-hint">↓</p>
+  </div>
+</div>
+
+<!-- 宣言 -->
+<section id="words">
+  <div class="container">
+    <p class="section-label">WORDS — 宣言</p>
+    <div class="declaration">
+      <p>自由とは、なんでもできることではない。<br>自分でルールを決められることだ。</p>
+      <p>幸せの本質はコントロール感にある。外の世界をコントロールしようとすれば競争が生まれる。勝者はいて1人、基本いない。自分の内側をコントロールすることに、競争は存在しない。誰も負けない。</p>
+      <p>神は万物に宿る。石にも、木にも、他者にも、自分にも。だから自分の行いを、自分の内側は知っている。</p>
+      <p>組織も権力もお金もいらない。<br>教えだけがあればいい。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 読む（目次＋層別展開） -->
+<section id="read">
+  <div class="container">
+    <p class="section-label">READ — 気になる章から読んでください</p>
+
+    <div class="toc">
+
+      <!-- 章1 -->
+      <div class="toc-item">
+        <div class="toc-header" onclick="toggleChapter(this)">
+          <span class="toc-num">01</span>
+          <span class="toc-title">自由とは何か</span>
+          <span class="toc-summary">ルールがないことは自由ではない</span>
+          <span class="toc-arrow">∨</span>
+        </div>
+        <div class="chapter-body">
+          <p>「自由とはなんでもできること」と思う人が多い。しかし本当はその逆だ。</p>
+          <p>ルールがないことは自由ではない。ルールを自分で決められることが自由だ。</p>
+          <p>世の中には2種類の人間しかいない。ルールを自分で決める人間と、人に決められる人間。囚人は外から押しつけられたルールに縛られ、チャレンジャーは自分で決めたルールで自分を縛る。表面上は同じ「縛り」だが、本質は全く違う。自分で選んだかどうか、その一点だけが違う。</p>
+          <button class="deep-read-btn" onclick="openModal('modal-1')">もっと深く読む →</button>
+        </div>
+      </div>
+
+      <!-- 章2 -->
+      <div class="toc-item">
+        <div class="toc-header" onclick="toggleChapter(this)">
+          <span class="toc-num">02</span>
+          <span class="toc-title">幸せとは何か</span>
+          <span class="toc-summary">内なるコントロールだけが全員の道</span>
+          <span class="toc-arrow">∨</span>
+        </div>
+        <div class="chapter-body">
+          <p>幸せの本質は、コントロール感にある。したいことができる、という感覚だ。</p>
+          <p>お金のない人はお金を求める。お金を持つと今度は時間を求める。外の世界をコントロールしようとすれば、必ず競争が生まれる。勝者はいて1人、基本いない。</p>
+          <p>みんなが幸せになれる唯一の方法がある。内なるコントロールに向かうことだ。自分の感情をコントロールする。自分の行動を選ぶ。これには競争がない。全員が向かえる方向だ。</p>
+          <p>一人の人間が世界を一瞬で変えられるとしたら、それは自分の認識が変わって生きている世界が変わることしかない。</p>
+          <button class="deep-read-btn" onclick="openModal('modal-2')">もっと深く読む →</button>
+        </div>
+      </div>
+
+      <!-- 章3 -->
+      <div class="toc-item">
+        <div class="toc-header" onclick="toggleChapter(this)">
+          <span class="toc-num">03</span>
+          <span class="toc-title">上下も優劣もない</span>
+          <span class="toc-summary">価値は球のようなもの、端がない</span>
+          <span class="toc-arrow">∨</span>
+        </div>
+        <div class="chapter-body">
+          <p>上も下も、優も劣も、人間が作った感覚でしかない。宇宙規模で考えれば、上下は存在しない。それは現代の科学が示している。</p>
+          <p>価値は直線ではなく、球のようなものだ。端がない。どこが頂点でどこが底かは決められない。「バカと天才は紙一重」と言われるのも、そういうことだ。直線で考えれば正反対に見えても、球の上では隣り合っている。</p>
+          <p>この感覚は時代によっても変わる。地球が球だと言えば死刑になった時代があった。今「当然」と思っていることも、ただの時代の感覚かもしれない。</p>
+          <button class="deep-read-btn" onclick="openModal('modal-3')">もっと深く読む →</button>
+        </div>
+      </div>
+
+      <!-- 章4 -->
+      <div class="toc-item">
+        <div class="toc-header" onclick="toggleChapter(this)">
+          <span class="toc-num">04</span>
+          <span class="toc-title">最小と最大はつながる</span>
+          <span class="toc-summary">全ての最小単位の数だけ、世界はある</span>
+          <span class="toc-arrow">∨</span>
+        </div>
+        <div class="chapter-body">
+          <p>クォークより小さいものが、最大のものへとつながっていく。最小を突き詰めると最大に戻る。全ての最小単位の数だけ、世界はある。</p>
+          <p>全てのものは無数の世界の集合体だ。自分を形成しているのも、数え切れないほどの「自分」である。それは宇宙の話であり、自分の話でもある。</p>
+          <button class="deep-read-btn" onclick="openModal('modal-4')">もっと深く読む →</button>
+        </div>
+      </div>
+
+      <!-- 章5 -->
+      <div class="toc-item">
+        <div class="toc-header" onclick="toggleChapter(this)">
+          <span class="toc-num">05</span>
+          <span class="toc-title">万物に神は宿る</span>
+          <span class="toc-summary">神を外に置いた瞬間、争いが始まる</span>
+          <span class="toc-arrow">∨</span>
+        </div>
+        <div class="chapter-body">
+          <p>神は万物に宿る。石にも、木にも、虫にも、他者にも、自分にも。神は外にいる審判者ではない。万物に宿るものが、自分にも宿っている。</p>
+          <p>万物の一つである自分も、同じように大切にしなければいけない。他者のためだけに自分を犠牲にすることは、万物の一部をないがしろにすることだ。</p>
+          <p>善悪は文化によって違う。問題は普遍的な悪の基準ではなく、自分の信念の中で「これは悪い」とわかってやること——自分の内側への裏切りだ。その裏切りが自分に返ってくる。</p>
+          <p>神を外に置いた瞬間、神は争いの道具になる。神を内に置けば、争う理由がない。</p>
+          <button class="deep-read-btn" onclick="openModal('modal-5')">もっと深く読む →</button>
+        </div>
+      </div>
+
+      <!-- 章6 -->
+      <div class="toc-item">
+        <div class="toc-header" onclick="toggleChapter(this)">
+          <span class="toc-num">06</span>
+          <span class="toc-title">資本主義という外なるコントロール</span>
+          <span class="toc-summary">終わりではなく、進化の話</span>
+          <span class="toc-arrow">∨</span>
+        </div>
+        <div class="chapter-body">
+          <p>資本主義は外なるコントロールをシステムとして制度化したものだ。競争・成長・所有・拡大。命の安全が保証されなかった時代、それは生存のために必要だった。</p>
+          <p>しかし安全が保証された社会では、その戦いはもう必要のない戦いかもしれない。これは資本主義の否定ではなく、進化だ。「他者に勝つための成長」から「自分が喜ぶための成長」へ。動機が変わるだけで、行動は続く。</p>
+          <p>欲を捨てよ、とは言わない。欲があったから文明が生まれ、医学が生まれ、あらゆる進化が起きた。欲は人類の力だ。問題は欲の存在ではなく、欲の向かう先が他者を不幸にするときだけだ。</p>
+          <button class="deep-read-btn" onclick="openModal('modal-6')">もっと深く読む →</button>
+        </div>
+      </div>
+
+      <!-- 章7 -->
+      <div class="toc-item">
+        <div class="toc-header" onclick="toggleChapter(this)">
+          <span class="toc-num">07</span>
+          <span class="toc-title">これは宗教です</span>
+          <span class="toc-summary">ただ、名前が「無宗教」という宗教</span>
+          <span class="toc-arrow">∨</span>
+        </div>
+        <div class="chapter-body">
+          <p>これは宗教だ。宗教は人を救うものだと思っている。目に見えないものを信じる力が、人類をここまで連れてきた。宗教は本質的にいいものだ。AIもインターネットも宗教も、使い方次第でしかない。</p>
+          <p>ただ、名前は「無宗教」にした。日本人の62%が「私は無宗教です」と言う。その人たちはすでに、ここにいる。</p>
+          <p>組織もない。権力もない。お金もない。教えだけがある。広めることは善だと思っている。ただ、押しつけは違う。共鳴した人が、自分の言葉で、誰かに話す。それだけでいい。</p>
+          <button class="deep-read-btn" onclick="openModal('modal-7')">もっと深く読む →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 変化の記録 -->
+<section id="log">
+  <div class="container">
+    <p class="section-label">LOG — 変化の記録</p>
+    <div class="log-entry">
+      <p class="log-date">2026年3月</p>
+      <p class="log-title">このサイトを公開した</p>
+      <p class="log-body">
+        何日かかけて、長年考えてきたことを言葉にした。<br>
+        最初から完成しているつもりはない。<br>
+        考えが変わったら、ここに書く。何が変わったか、なぜ変わったかも。<br>
+        正解が変わるのではなく、言葉が近づいていく。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 夢 -->
+<section id="dream">
+  <div class="container">
+    <p class="section-label">DREAM</p>
+    <p class="dream-text">
+      いつか、山の頂上に世界一の像を建てたい。<br>
+      高いところにあるから、遠くからでも見える。<br><br>
+      子どもみたいな夢だと思う。<br>
+      でも、そういうものが人を動かすこともある。
+    </p>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="container">
+    無宗教<br>
+    個人が運営しています。<br>
+    最終更新：2026年3月
+  </div>
+</footer>
+
+
+<!-- ─── 深読みモーダル群 ─── -->
+
+<!-- 章1 深読み -->
+<div class="modal-overlay" id="modal-1">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('modal-1')">← 戻る</button>
+    <p class="modal-label">01 — 深く読む</p>
+    <h2 class="modal-title">自由とは何か</h2>
+
+    <div class="modal-section">
+      <p class="modal-section-title">たとえ話</p>
+      <p>刑務所の中の受刑者と、過酷なトレーニングを自分に課しているアスリート。どちらも「自由ではない」ように見える。しかし感じ方は全く違う。受刑者は自分で選んでいない。アスリートは自分で決めた。</p>
+      <p>これは極端な例だが、日常も同じだ。誰かに言われたからやっている仕事と、自分でやると決めた仕事は、たとえ内容が同じでも、体の感覚が違う。</p>
+      <div class="modal-quote">
+        ルールがないことは自由ではない。<br>
+        ルールを自分で決められることが自由だ。
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">「底辺」と「挑戦者」が似ている理由</p>
+      <p>社会で「底辺」と呼ばれる人と、大きなチャレンジをしている人。一見正反対に見えるが、どちらも「ルールに縛られている」という点で球の上では近い位置にいる。</p>
+      <p>違いはただ一つ。そのルールを自分で選んだかどうかだ。</p>
+      <p>チャレンジャーが苦しいルールを自分に課せるのは、それを選んだという感覚があるからだ。その感覚こそが自由であり、同時に幸せの根拠になる。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">科学が言っていること</p>
+      <p>心理学では「自己決定理論」という研究がある。人間には「自分で選んでいる」という感覚が幸福に不可欠だと示している。外から押しつけられた行動より、自分で選んだ行動の方が長く続き、満足度も高い。これは世界中の研究で繰り返し確認されている。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 章2 深読み -->
+<div class="modal-overlay" id="modal-2">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('modal-2')">← 戻る</button>
+    <p class="modal-label">02 — 深く読む</p>
+    <h2 class="modal-title">幸せとは何か</h2>
+
+    <div class="modal-section">
+      <p class="modal-section-title">「足りない」の構造</p>
+      <p>年収300万円の人は「500万あれば幸せ」と思う。500万になると「800万あれば」と思う。これは意地悪な話でも弱さの話でもなく、外のコントロールを求める行動の構造的な結果だ。</p>
+      <p>外のコントロールには天井がない。どこまで行っても「もう少し」が続く。勝者はいて1人、基本いない。そのゲームに乗り続ける限り、「足りない」感覚は消えない。</p>
+      <div class="modal-quote">
+        欲を追うことが不幸の構造だ。<br>
+        欲から降りることで、幸福が戻ってくる。
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">内なるコントロールとは何か</p>
+      <p>「内なるコントロール」と聞くと、「何もしないこと」「諦めること」に聞こえるかもしれない。違う。</p>
+      <p>自分の感情に流されず、反応を選ぶこと。怒りを感じても、怒鳴らないと決められること。不安を感じても、行動できること。これが内なるコントロールだ。</p>
+      <p>ただし、「今すぐできなければならない」と読まないでほしい。できない自分を責めることは、この教えの反対にある。向かう意思を持てること——まずそれで十分だ。</p>
+      <p>人は自分の成長を喜ぶ。本来ほとんどの人間は仕事が好きで、役割や作業を求める。内なるコントロールは成長の否定ではなく、動機の転換だ。「他者に勝つため」ではなく「自分が喜ぶため」に向かう。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">世界が一瞬で変わる</p>
+      <p>同じ職場、同じ収入、同じ部屋。でも「これは自分が選んでいる」と思えた瞬間、世界が変わる。外は何も変わっていない。変わったのは内側だけだ。</p>
+      <p>一人の人間が世界を一瞬で変えられるとしたら、それはこの瞬間のことだ。</p>
+      <p>もっとも、その「思えた瞬間」は一度で訪れないことも多い。同じ状況を何度も経験し、少しずつ視点が動いていく。それも確かな変化だ。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 章3 深読み -->
+<div class="modal-overlay" id="modal-3">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('modal-3')">← 戻る</button>
+    <p class="modal-label">03 — 深く読む</p>
+    <h2 class="modal-title">上下も優劣もない</h2>
+
+    <div class="modal-section">
+      <p class="modal-section-title">宇宙に「上」はあるか</p>
+      <p>地球の上空を「上」と呼ぶ。しかし地球の裏側から見れば、その「上」は下になる。さらに宇宙まで出れば、どちらが上かは決められない。宇宙に特権的な「上」は存在しない。これは現代物理学が示していることだ。</p>
+      <p>「上下」は重力場という局所的な条件が作り出した感覚であって、世界の実態ではない。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">価値は球のようなもの</p>
+      <p>人間は価値を直線で考えがちだ。賢い⇔バカ、成功⇔失敗、善⇔悪。でも球で考えると違う。球には端がない。どこが頂点かは決められない。「バカと天才は紙一重」とはよく言われるが、これは球の上では隣り合っているということだ。</p>
+      <p>チャレンジャーとチャレンジから逃げた人間も、球の上では近い位置にいる。どちらも「恐れ」を軸に動いているからだ。向き合う恐れと、避ける恐れ。</p>
+      <div class="modal-quote">
+        価値に端はない。<br>
+        頂点も底もない。ただ、それぞれの場所がある。
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">時代が変えた「常識」</p>
+      <p>地球が球だと言えば死刑になった時代があった。当時の人々にとって、地動説は「常識に反する危険な考え」だった。</p>
+      <p>今自分が「当然」と思っていることも、100年後の人間から見れば「なぜそう信じていたのか」と思われるかもしれない。上下・優劣・善悪の基準も、時代という感覚の中にある。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 章4 深読み -->
+<div class="modal-overlay" id="modal-4">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('modal-4')">← 戻る</button>
+    <p class="modal-label">04 — 深く読む</p>
+    <h2 class="modal-title">最小と最大はつながる</h2>
+
+    <div class="modal-section">
+      <p class="modal-section-title">物理学が近づいている場所</p>
+      <p>物質を分解していくと、原子になり、電子・陽子・中性子になり、さらにクォークになる。そして物質の分解を理論上の極限まで突き詰めていくと、「プランクスケール」と呼ばれる領域に近づく。そこでは物理学は「空間」という概念そのものが成立しなくなると示されている。</p>
+      <p>最小を突き詰めると、「最小」という概念が消える。最大を広げていくと、宇宙の果てという概念も消える。始まりと終わりが循環する。</p>
+      <div class="modal-quote">
+        全ての最小単位の数だけ、世界はある。<br>
+        自分を形成しているのも、数え切れないほどの「自分」だ。
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">自分という集合体</p>
+      <p>昨日の自分、眠いときの自分、喜んでいるときの自分、怒っているときの自分。全部「自分」だが、少しずつ違う。どれが「本当の自分」かではなく、それら全てが自分を形成している。</p>
+      <p>一つ一つの細胞が世界を持っているように、自分を構成する全てのものに、それぞれの世界がある。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">内側に刻まれた知恵</p>
+      <p>人類が38億年かけて歩んできた道のりは、体の内側に痕跡を残している。何が生存を助け、何が滅びをもたらしたか。進化の選択がそれを教えてくれる。</p>
+      <p>昔の世界では、仲間を傷つけるテイカーは集団から排除された。協力できる集団が生き残り、その子孫が今の人類だ。「人を助けたい・役に立ちたい」という感覚は、人類の長い歴史が育てた本来の姿かもしれない。忙しいときに誰かを助けると自分の焦りが消える——その感覚も、内側に刻まれた仕組みだ。</p>
+      <div class="modal-quote">
+        答えはすでに内側にある。<br>
+        人類の知恵は、自分の中に眠っている。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 章5 深読み -->
+<div class="modal-overlay" id="modal-5">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('modal-5')">← 戻る</button>
+    <p class="modal-label">05 — 深く読む</p>
+    <h2 class="modal-title">万物に神は宿る</h2>
+
+    <div class="modal-section">
+      <p class="modal-section-title">神はどこにいるか</p>
+      <p>多くの宗教は神を「外」に置く。空の上、あの世、聖地。その神の「代理人」が生まれ、組織ができ、権力が生まれ、争いが起きる。</p>
+      <p>しかし神が万物に宿るのであれば、神は石の中にも、木の中にも、他者の中にも、自分の中にも、等しくいる。誰かだけが神に近い、という構造が成立しない。</p>
+      <div class="modal-quote">
+        神を外に置いた瞬間、神は争いの道具になる。<br>
+        神を内に置けば、争う理由がない。
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">善悪について</p>
+      <p>ある文化でタブーとされることが、別の文化では普通のことがある。善悪の「内容」は文化によって違う。</p>
+      <p>だから「普遍的な悪」を定義しようとすると、必ず文化の衝突が起きる。「私の神が正しい悪の基準を持っている」と言った瞬間、争いの準備が始まる。</p>
+      <p>問題は内容ではなく構造だ。自分の信念の中で「これは悪い」とわかってやること。それが自分に返ってくる。自分の内側への裏切りが、自分を蝕む。</p>
+      <p>ただし、裏切りに気づいた後に「また繰り返してしまった」と責めることは、二重の傷になる。裏切りがあったなら、なぜそうせざるを得なかったかを自分に問うことの方が先だ。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">自分も万物の一つ</p>
+      <p>万物に神が宿るのなら、他者も、自然も、自分も、等しく大切なものになる。「他者のために自分を犠牲にする」ことが美徳とされることがある。しかしひどい自己犠牲は、万物の一部である自分をないがしろにすることだ。</p>
+      <p>宗教の特定の解釈や運用が「ボトムギバー」を生み出してきた。与え続けて自分が空になる人間を。それは救いではなく、もう一人の不幸を作ることだ。自分を大切にすることと、他者を大切にすることは矛盾しない。</p>
+      <p>組織心理学者アダム・グラントの研究は、これを数字で裏付けた。最も成果を出す人間はギバーだが、最も燃え尽きるのも同じギバーだ。違いは一点——「自分を万物の一つとして守りながら与えるか、自分を消して与えるか」。前者は最上位に、後者は最下位に行き着く。</p>
+      <div class="modal-quote">
+        自分を救えない人間が、<br>
+        他者を救うことはできない。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 章6 深読み -->
+<div class="modal-overlay" id="modal-6">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('modal-6')">← 戻る</button>
+    <p class="modal-label">06 — 深く読む</p>
+    <h2 class="modal-title">資本主義という外なるコントロール</h2>
+
+    <div class="modal-section">
+      <p class="modal-section-title">資本主義が生まれた理由</p>
+      <p>命の安全が保証されない時代、食料・土地・権力をめぐる争いは生存の問題だった。外の世界をコントロールすることは、生きることと同義だった。資本主義はその時代に合ったシステムだ。</p>
+      <p>しかし安全が保証された社会では、その戦いはもう「必要のない戦い」になっているかもしれない。それでも人間の脳は、まだその戦いを続けようとする。これを進化生物学では「ミスマッチ」と呼ぶ。環境が変わったのに、回路が追いついていない状態だ。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">共産主義が失敗した理由</p>
+      <p>「競争をなくせば平等になる」という発想で生まれた共産主義は、人間から大切なものを奪った。役割、成長、達成の喜び。人は本来仕事が好きで、何かを成し遂げることを求める。その欲求を制度で抑えようとしたことが失敗の一因だ。</p>
+      <p>内なるコントロールへ向かうとは、成長をやめることではない。動機を変えることだ。</p>
+      <div class="modal-quote">
+        「他者に勝つための成長」から<br>
+        「自分が喜ぶための成長」へ。<br>
+        動機が変わるだけで、行動は続く。
+      </div>
+      <p>ただし、動機の転換は決意で一夜にして起きるものではない。行動を続けるうちに、気づけば動機が変わっていた——そういう順序で訪れることの方が多い。だから「今すぐ切り替えられなくてもいい」。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">欲を捨てよとは言わない</p>
+      <p>欲を完全に捨てることができるのは、ブッダのような存在だけだ。普通の人間にそれを求めると、できない自分への罪悪感が生まれる。罪悪感は不幸の源泉だ。救いたい人を傷つける構造になってしまう。</p>
+      <p>欲がなければ良くしたいという気持ちも生まれない。文明も医学もAIも、欲があったから生まれた。欲は人類の進化そのものだ。欲がなくても生きていける世界にいることは、それ自体が贅沢な状態だ。</p>
+      <p>悪いのは欲ではない。欲の向かう先が他者を不幸にするときだけだ。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 章7 深読み -->
+<div class="modal-overlay" id="modal-7">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal('modal-7')">← 戻る</button>
+    <p class="modal-label">07 — 深く読む</p>
+    <h2 class="modal-title">これは宗教です</h2>
+
+    <div class="modal-section">
+      <p class="modal-section-title">なぜ「無宗教」という名前か</p>
+      <p>「私は無宗教です」——日本人の多くがそう言う。しかしその言葉の意味をよく聞くと、「特定の組織に属していない」ということだ。神社に行き、お盆に墓参りをし、自然に畏敬を感じながら、「無宗教です」と言う。</p>
+      <p>その人たちはすでに、ここにいる。「無宗教」という名前は、その人たちへの呼びかけだ。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">宗教は人類の力だった</p>
+      <p>サピエンス全史が示すように、目に見えないものを信じる力——神話・宗教・国家・貨幣——がホモ・サピエンスを他の生物と分けた。大勢の見知らぬ人間が協力できるのは、共通の「信じるもの」があるからだ。</p>
+      <p>宗教は本質的にいいものだ。AIもインターネットも宗教も、使い方次第でしかない。問題は宗教ではなく、組織・権力・お金が教えより大きくなったことだ。</p>
+      <div class="modal-quote">
+        組織を持った瞬間に、教えの外側に<br>
+        「守るべき何か」が生まれる。<br>
+        その「外側」が、やがて教えより大きくなる。
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">なぜ今ならできるか</p>
+      <p>インターネットとAIがある今、言葉を届けるコストはほぼゼロになった。組織がなくても、お金がなくても、世界中に言葉を置いておける。AIは完璧ではない。設計者の意図を反映するし、誤りも生む。ただ、組織を持てない分、「守るべき外側」が生まれる構造からは遠い。教えを届けるためのコストが限りなく小さいこと——それがAIとインターネットの本質的な利点だ。</p>
+      <p>いつかこの思想が広まれば、お布施でAIの相談役を作りたいと思っている。お坊さんや牧師のように、誰かの話を聞き、この思想と一緒に考える存在を。そして遠い夢だが、山の頂上に像を建てたい。遠くからでも見える、大きな像を。</p>
+    </div>
+
+    <div class="modal-section">
+      <p class="modal-section-title">このサイトについて</p>
+      <p>このサイトはAIと一人の人間が、会話の中で考えをまとめたものだ。完成していない。考えが変わったら書き直す。何が変わったか、なぜ変わったかも記録する。</p>
+      <p>信じなくていい。ただ、もし自分の内側で何かが動いたなら、それはあなた自身の考えだ。</p>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // 進捗バー
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrollTop / docHeight * 100) + '%';
+  });
+
+  // 章の展開・折りたたみ
+  function toggleChapter(header) {
+    const item = header.parentElement;
+    const body = item.querySelector('.chapter-body');
+    const isOpen = item.classList.contains('open');
+    item.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  // 深読みモーダル
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ESCキーでモーダルを閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(m => {
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
