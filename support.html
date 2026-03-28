@@ -81,14 +81,61 @@
       line-height: 2.0; margin-bottom: 32px;
     }
 
-    /* Google AdSenseのコードをここに差し替える */
-    .ad-placeholder {
-      background: #F5F3EF;
-      border: 1px dashed #DDD;
-      height: 120px;
-      display: flex; align-items: center; justify-content: center;
-      color: #ccc; font-size: 13px; letter-spacing: 0.1em;
+    /* ── お布施ボタン ── */
+    .ofuse-btn {
+      display: block; width: 100%;
+      padding: 24px;
+      background: none;
+      border: 1px solid #c0a080;
+      color: #c0a080;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 15px; letter-spacing: 0.2em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      text-align: center;
     }
+    .ofuse-btn:hover {
+      background: #c0a080;
+      color: #fff;
+    }
+    .ofuse-note {
+      font-size: 12px; color: #ccc; text-align: center;
+      margin-top: 16px; letter-spacing: 0.05em;
+    }
+
+    /* ── お礼モーダル ── */
+    .thanks-overlay {
+      position: fixed; inset: 0;
+      background: rgba(250,250,248,0.97);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 200;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s;
+      padding: 40px 24px; text-align: center;
+    }
+    .thanks-overlay.open {
+      opacity: 1; pointer-events: auto;
+    }
+    .thanks-label {
+      font-size: 11px; letter-spacing: 0.4em; color: #ccc; margin-bottom: 40px;
+    }
+    .thanks-main {
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 300; letter-spacing: 0.05em; line-height: 2.0;
+      margin-bottom: 32px;
+    }
+    .thanks-sub {
+      font-size: 14px; color: #888; font-weight: 300;
+      line-height: 2.2; margin-bottom: 56px;
+    }
+    .thanks-close {
+      background: none; border: none;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 12px; letter-spacing: 0.2em; color: #bbb;
+      cursor: pointer;
+    }
+    .thanks-close:hover { color: #1A1A1A; }
 
     /* ── 使い道（フェーズ） ── */
     #vision { padding-bottom: 80px; }
@@ -178,16 +225,31 @@
   </div>
 </section>
 
-<!-- 広告エリア -->
+<!-- お布施ボタン -->
 <div id="ad-area">
   <div class="container">
-    <p class="ad-label">SUPPORT — 広告</p>
-    <p class="ad-note">以下の広告を一度クリックしていただけると、このサイトの運営につながります。</p>
+    <p class="ad-label">SUPPORT — お気持ちを届ける</p>
+    <p class="ad-note">費用は発生しません。ボタンを押すだけでいい。</p>
 
-    <!-- ここにGoogle AdSenseのコードを貼る -->
-    <div class="ad-placeholder">広告エリア（AdSense設置後に切り替え）</div>
+    <button class="ofuse-btn" onclick="sendOfuse()">このサイトを支える</button>
+    <p class="ofuse-note">※ 将来的に広告が設置された際はこのボタンが切り替わります</p>
 
   </div>
+</div>
+
+<!-- お礼モーダル -->
+<div class="thanks-overlay" id="thanks-overlay">
+  <p class="thanks-label">ARIGATOU — お気持ち</p>
+  <p class="thanks-main">
+    まだ、収益化できるほど<br>人を救えていません。
+  </p>
+  <p class="thanks-sub">
+    それでも、あなたがここに来て<br>
+    ボタンを押してくれたこと。<br>
+    ちゃんと届いています。<br>
+    ありがとうございます。
+  </p>
+  <button class="thanks-close" onclick="closeThanks()">← 戻る</button>
 </div>
 
 <!-- 使い道・フェーズ -->
@@ -241,6 +303,29 @@
     最終更新：2026年3月
   </div>
 </footer>
+
+<script>
+  function sendOfuse() {
+    // GoatCounterでクリックを記録（設定後に有効になります）
+    if (window.goatcounter) {
+      window.goatcounter.count({ path: 'ofuse-click', title: 'お布施ボタンクリック' });
+    }
+    document.getElementById('thanks-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeThanks() {
+    document.getElementById('thanks-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeThanks();
+  });
+</script>
+
+<!-- GoatCounter（クリック数計測）- アカウント取得後に YOURCODE を置き換えてください -->
+<!-- <script data-goatcounter="https://YOURCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script> -->
 
 </body>
 </html>
